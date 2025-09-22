@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vòng quay may mắn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <-- Phần chọn lớp -->
+  <div id="step1" class="step active">
+    <h2>Bạn đang học lớp mấy?</h2>
+    <select id="classSelect">
+      <option value="">--Chọn lớp--</option>
+      <option value="6">Lớp 6</option>
+      <option value="7">Lớp 7</option>
+      <option value="8">Lớp 8</option>
+    </select>
+    <button onclick="nextStep(2)">Tiếp tục</button>
+  </div>
 
+  <-- Phần nhập số học sinh -->
+  <div id="step2" class="step">
+    <h2>Có bao nhiêu học sinh?</h2>
+    <input type="number" id="studentCount" placeholder="Nhập số học sinh">
+    <button onclick="nextStep(3)">Tiếp tục</button>
+  </div>
+
+  <-- Phần giao diện chính -->
+  <div id="step3" class="step">
+    <div class="switch-bar">
+      <button onclick="showPanel('student')">Học sinh số mấy</button>
+      <button onclick="showPanel('wheel')">Vòng chủ đề</button>
+    </div>
+
+    <div id="studentPanel" class="panel active">
+      <h2 id="studentResult">Nhấn nút để chọn học sinh</h2>
+      <button onclick="pickStudent()">Chọn học sinh</button>
+    </div>
+
+    <div id="wheelPanel" class="panel">
+      <h2>Vòng quay chủ đề</h2>
+      <canvas id="wheelCanvas" width="400" height="400"></canvas>
+      <button onclick="spinWheel()">Quay!</button>
+      <p id="wheelResult"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
