@@ -2,25 +2,28 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vòng quay may mắn</title>
+  <title>Vòng Quay May Mắn</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Thư viện confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  <!-- Thanh tiêu đề -->
   <header>
-    <h1>🎡 Vòng quay may mắn 🎡</h1>
+    <h1>🎡 Vòng Quay May Mắn</h1>
   </header>
 
-  <!-- Container vòng quay -->
-  <main>
-    <div class="wheel-container">
-      <div class="pointer"></div>
-      <canvas id="wheelCanvas" width="500" height="500"></canvas>
-    </div>
-    <button id="spinBtn">Quay ngay!</button>
-    <p id="resultText"></p>
-  </main>
+  <div class="switch-container">
+    <button onclick="showWheel('students')">Vòng HS</button>
+    <button onclick="showWheel('topics')">Vòng Chủ đề</button>
+  </div>
+
+  <!-- Vòng quay học sinh -->
+  <div id="students-wheel" class="wheel-container"></div>
+
+  <!-- Vòng quay chủ đề -->
+  <div id="topics-wheel" class="wheel-container" style="display:none;"></div>
+
+  <div id="result" class="result-box"></div>
 
   <script src="script.js"></script>
 </body>
