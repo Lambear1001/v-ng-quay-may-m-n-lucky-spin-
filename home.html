@@ -1,30 +1,18 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Vòng Quay May Mắn</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Thư viện confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Vòng Quay May Mắn</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🎡 Vòng Quay May Mắn</h1>
-  </header>
-
-  <div class="switch-container">
-    <button onclick="showWheel('students')">Vòng HS</button>
-    <button onclick="showWheel('topics')">Vòng Chủ đề</button>
-  </div>
-
-  <!-- Vòng quay học sinh -->
-  <div id="students-wheel" class="wheel-container"></div>
-
-  <!-- Vòng quay chủ đề -->
-  <div id="topics-wheel" class="wheel-container" style="display:none;"></div>
-
-  <div id="result" class="result-box"></div>
-
-  <script src="script.js"></script>
+    <h1>Vòng Quay May Mắn</h1>
+    <textarea id="prizeInput" rows="3" cols="40" placeholder="Nhập các phần thưởng, cách nhau bởi dấu phẩy hoặc xuống dòng"></textarea><br>
+    <button id="updateBtn">Cập nhật phần thưởng</button>
+    <br><br>
+    <canvas id="wheel" width="500" height="500"></canvas>
+    <button id="spinBtn">Quay!</button>
+    <div id="result"></div>
+    <script src="script.js"></script>
 </body>
 </html>
