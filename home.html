@@ -1,18 +1,32 @@
 !DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vòng Quay May Mắn</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Lucky Spin Wheel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Vòng Quay May Mắn</h1>
-    <textarea id="prizeInput" rows="3" cols="40" placeholder="Nhập các phần thưởng, cách nhau bởi dấu phẩy hoặc xuống dòng"></textarea><br>
-    <button id="updateBtn">Cập nhật phần thưởng</button>
-    <br><br>
-    <canvas id="wheel" width="500" height="500"></canvas>
-    <button id="spinBtn">Quay!</button>
-    <div id="result"></div>
-    <script src="script.js"></script>
+  <div class="container">
+    <div class="wheel-area">
+      <canvas id="wheel" width="500" height="500"></canvas>
+      <div class="wheel-text">
+        <div class="top-text">Click to spin</div>
+        <div class="bottom-text">or press ctrl+enter</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <button id="shuffle">Shuffle</button>
+        <button id="sort">Sort</button>
+        <button id="add-image">Add image ▼</button>
+      </div>
+      <textarea id="entries" placeholder="Enter entries here..."></textarea>
+      <div class="panel-footer">
+        Version 379 <a href="#">Changelog</a>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
