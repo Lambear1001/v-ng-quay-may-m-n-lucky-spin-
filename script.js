@@ -3,6 +3,32 @@ const ctx = wheel.getContext('2d');
 
 // Draw base wheel (simple grey disc)
 function drawWheel(angle = 0) {
+ function drawCurvedText(ctx, text, centerX, centerY, radius, startAngle, clockwise=true) {
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate(startAngle);
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    // Ước lượng độ rộng mỗi ký tự (có thể chỉnh lại cho đẹp hơn)
+    const angle = (clockwise ? 1 : -1) * (Math.PI / 32);
+
+    ctx.save();
+    ctx.rotate(i * angle);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "bold 32px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.shadowColor = "#888";
+    ctx.shadowBlur = 4;
+    ctx.fillText(char, 0, -radius);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// Vẽ bánh xe và chữ cong
+function drawWheel(angle = 0) {
   ctx.clearRect(0,0,500,500);
   ctx.save();
   ctx.translate(250, 250);
@@ -15,14 +41,13 @@ function drawWheel(angle = 0) {
   ctx.fill();
   ctx.restore();
   ctx.shadowBlur = 0;
+
+  // Vẽ chữ cong phía trên
+  drawCurvedText(ctx, "Click to spin", 250, 250, 180, -Math.PI/2, true);
+  // Vẽ chữ cong phía dưới
+  drawCurvedText(ctx, "or press ctrl+enter", 250, 250, 180, Math.PI/2, false);
 }
 drawWheel();
-
-let spinning = false;
-let angle = 0;
-let angularVelocity = 0;
-let animationFrameId = null;
-
 // Hàm quay bánh xe với easing
 function spinWheel() {
   if (spinning) return; // Đang quay thì không làm gì
