@@ -1,7 +1,6 @@
 const wheel = document.getElementById('wheel');
 const ctx = wheel.getContext('2d');
 
-// Draw base wheel (simple grey disc)
 function drawWheel(angle = 0) {
  function drawCurvedText(ctx, text, centerX, centerY, radius, startAngle, clockwise=true) {
   ctx.save();
@@ -48,11 +47,13 @@ function drawWheel(angle = 0) {
   drawCurvedText(ctx, "or press ctrl+enter", 250, 250, 180, Math.PI/2, false);
 }
 drawWheel();
+ 
 // Hàm quay bánh xe với easing
 function spinWheel() {
   if (spinning) return; // Đang quay thì không làm gì
   spinning = true;
   angle = 0;
+ 
   // Tốc độ ban đầu (radian mỗi frame)
   angularVelocity = Math.random() * 0.2 + 0.35; // random tốc độ ban đầu
   let deceleration = 0.995; // hệ số giảm tốc (0.99-0.995 sẽ chậm lại dần)
