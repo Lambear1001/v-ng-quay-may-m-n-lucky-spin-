@@ -1,73 +1,82 @@
 const wheel = document.getElementById('wheel');
 const ctx = wheel.getContext('2d');
+const entriesBox = document.getElementById('entries');
 
-function drawCurvedText(ctx, text, centerX, centerY, radius, startAngle, clockwise=true) {
-  ctx.save();
-  ctx.translate(centerX, centerY);
-  ctx.rotate(startAngle);
+let spinning = false;
+let angle = 0;
+let angularVelocity = 0;
+let animationFrameId;
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    // Ước lượng độ rộng mỗi ký tự (có thể chỉnh lại cho đẹp hơn)
-    const angle = (clockwise ? 1 : -1) * (Math.PI / 32);
+// Hàm vẽ bánh xe với entries
+function drawWheel(a = 0) {
+  const entries = entriesBox.value
+    .split("\n")
+    .map(e => e.trim())
+    .filter(e => e.length > 0);
 
-    ctx.save();
-    ctx.rotate(i * angle);
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = "bold 32px Arial";
-    ctx.fillStyle = "#fff";
-    ctx.shadowColor = "#888";
-    ctx.shadowBlur = 4;
-    ctx.fillText(char, 0, -radius);
-    ctx.restore();
-  }
-  ctx.restore();
-}
+  const n = entries.length || 1; // số ô
+  const arc = (2 * Math.PI) / n;
 
-// Vẽ bánh xe và chữ cong
-function drawWheel(angle = 0) {
-  ctx.clearRect(0,0,500,500);
+  ctx.clearRect(0, 0, wheel.width, wheel.height);
+
   ctx.save();
   ctx.translate(250, 250);
-  ctx.rotate(angle);
-  ctx.beginPath();
-  ctx.arc(0, 0, 240, 0, 2 * Math.PI);
-  ctx.fillStyle = '#bbb';
-  ctx.shadowColor = "#888";
-  ctx.shadowBlur = 8;
-  ctx.fill();
-  ctx.restore();
-  ctx.shadowBlur = 0;
+  ctx.rotate(a);
 
-  // Vẽ chữ cong phía trên
-  drawCurvedText(ctx, "Click to spin", 250, 250, 180, -Math.PI/2, true);
-  // Vẽ chữ cong phía dưới
-  drawCurvedText(ctx, "or press ctrl+enter", 250, 250, 180, Math.PI/2, false);
+  for (let i = 0; i < n; i++) {
+    // vẽ sector
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 240, i * arc, (i + 1) * arc);
+    ctx.closePath();
+    ctx.fillStyle = i % 2 === 0 ? "#f8b400" : "#f85f73";
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.stroke();
+
+    // vẽ text
+    ctx.save();
+    ctx.rotate(i * arc + arc / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 18px Arial";
+    ctx.fillText(entries[i] || "?", 220, 10);
+    ctx.restore();
+  }
+
+  ctx.restore();
 }
+
 drawWheel();
- 
-// Hàm quay bánh xe với easing
+
+// Hàm quay bánh xe
 function spinWheel() {
-  if (spinning) return; // Đang quay thì không làm gì
+  if (spinning) return;
   spinning = true;
-  angle = 0;
- 
-  // Tốc độ ban đầu (radian mỗi frame)
-  angularVelocity = Math.random() * 0.2 + 0.35; // random tốc độ ban đầu
-  let deceleration = 0.995; // hệ số giảm tốc (0.99-0.995 sẽ chậm lại dần)
+
+  angularVelocity = Math.random() * 0.2 + 0.35;
+  let deceleration = 0.992;
 
   function animate() {
     angle += angularVelocity;
-    angularVelocity *= deceleration; // giảm tốc dần
+    angularVelocity *= deceleration;
 
     drawWheel(angle);
 
-    // Khi tốc độ nhỏ hơn ngưỡng, thì dừng lại
     if (angularVelocity < 0.002) {
       spinning = false;
       cancelAnimationFrame(animationFrameId);
-      // Bạn có thể xử lý kết quả tại đây!
+
+      // Xác định kết quả
+      const entries = entriesBox.value
+        .split("\n")
+        .map(e => e.trim())
+        .filter(e => e.length > 0);
+      if (entries.length > 0) {
+        const arc = (2 * Math.PI) / entries.length;
+        const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
+        alert("Kết quả: " + entries[index]);
+      }
       return;
     }
     animationFrameId = requestAnimationFrame(animate);
@@ -75,4 +84,7 @@ function spinWheel() {
   animate();
 }
 
-document.getElementById('wheel').addEventListener('click', spinWheel);
+wheel.addEventListener('click', spinWheel);
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === "Enter") spinWheel();
+});
