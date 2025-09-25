@@ -1,8 +1,7 @@
 const wheel = document.getElementById('wheel');
 const ctx = wheel.getContext('2d');
 
-function drawWheel(angle = 0) {
- function drawCurvedText(ctx, text, centerX, centerY, radius, startAngle, clockwise=true) {
+function drawCurvedText(ctx, text, centerX, centerY, radius, startAngle, clockwise=true) {
   ctx.save();
   ctx.translate(centerX, centerY);
   ctx.rotate(startAngle);
