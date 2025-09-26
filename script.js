@@ -1,99 +1,96 @@
-cconst wheel = document.getElementById('wheel');
-const ctx = wheel.getContext('2d');
+const wheel = document.getElementById("wheel");
+const ctx = wheel.getContext("2d");
+let entries = ["A", "B", "C", "D"]; // mặc định
+let currentRotation = 0;
 
-let angle = 0;
-let spinning = false;
-let animationFrameId;
-let options = [];
-let currentWinner = null;
+// textarea auto update
+const textarea = document.getElementById("entries");
+textarea.value = entries.join("\n");
+textarea.addEventListener("input", () => {
+  entries = textarea.value.split("\n").filter(e => e.trim() !== "");
+  drawWheel();
+});
 
-function drawWheel(rotation = 0) {
+// modal elements
+const modal = document.getElementById("resultModal");
+const resultText = document.getElementById("resultText");
+const keepBtn = document.getElementById("keepBtn");
+const removeBtn = document.getElementById("removeBtn");
+let selectedEntry = null;
+
+function drawWheel() {
   ctx.clearRect(0,0,500,500);
-  ctx.save();
-  ctx.translate(250, 250);
-  ctx.rotate(rotation);
-
-  // Nếu có entries thì chia bánh xe
-  if (options.length > 0) {
-    let arc = 2 * Math.PI / options.length;
-    for (let i = 0; i < options.length; i++) {
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.fillStyle = i % 2 === 0 ? "#f4b400" : "#4285f4";
-      ctx.arc(0, 0, 240, i * arc, (i+1) * arc);
-      ctx.fill();
-      
-      // text
-      ctx.save();
-      ctx.rotate(i * arc + arc/2);
-      ctx.textAlign = "right";
-      ctx.fillStyle = "#fff";
-      ctx.font = "20px Arial";
-      ctx.fillText(options[i], 220, 10);
-      ctx.restore();
-    }
-  } else {
-    // mặc định nền xám
+  const angle = (2 * Math.PI) / entries.length;
+  entries.forEach((entry, i) => {
     ctx.beginPath();
-    ctx.arc(0,0,240,0,2*Math.PI);
-    ctx.fillStyle = "#bbb";
+    ctx.moveTo(250, 250);
+    ctx.arc(250, 250, 250, i*angle, (i+1)*angle);
+    ctx.fillStyle = i % 2 === 0 ? "#f39c12" : "#3498db";
     ctx.fill();
-  }
-
-  ctx.restore();
+    ctx.save();
+    ctx.translate(250, 250);
+    ctx.rotate(i*angle + angle/2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
+    ctx.font = "20px Arial";
+    ctx.fillText(entry, 220, 10);
+    ctx.restore();
+  });
 }
-
 drawWheel();
 
-// Quay bánh xe
-function spinWheel() {
-  if (spinning || options.length === 0) return;
-  spinning = true;
-  let angularVelocity = Math.random() * 0.2 + 0.35;
-  let deceleration = 0.995;
+// spin logic
+wheel.addEventListener("click", spin);
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.key === "Enter") spin();
+});
 
-  function animate() {
-    angle += angularVelocity;
-    angularVelocity *= deceleration;
+function spin() {
+  if (entries.length === 0) return;
+  const spins = 5 + Math.random() * 3;
+  const angle = (2 * Math.PI) / entries.length;
+  const randomIndex = Math.floor(Math.random() * entries.length);
+  const targetRotation = (2 * Math.PI * spins) - (randomIndex * angle + angle/2);
 
-    drawWheel(angle);
+  let start = null;
+  function animate(time) {
+    if (!start) start = time;
+    const progress = (time - start) / 4000;
+    if (progress < 1) {
+      currentRotation = targetRotation * easeOut(progress);
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.translate(250,250);
+      ctx.rotate(currentRotation);
+      ctx.translate(-250,-250);
+      drawWheel();
+      requestAnimationFrame(animate);
+    } else {
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.translate(250,250);
+      ctx.rotate(targetRotation);
+      ctx.translate(-250,-250);
+      drawWheel();
 
-    if (angularVelocity < 0.002) {
-      spinning = false;
-      cancelAnimationFrame(animationFrameId);
-
-      // Tính kết quả
-      let arc = 2 * Math.PI / options.length;
-      let selected = Math.floor(((2 * Math.PI - (angle % (2 * Math.PI))) % (2 * Math.PI)) / arc);
-      currentWinner = options[selected];
-      showWinner(currentWinner);
-      return;
+      // kết quả
+      selectedEntry = entries[randomIndex];
+      resultText.textContent = `Result: ${selectedEntry}`;
+      modal.style.display = "flex";
     }
-    animationFrameId = requestAnimationFrame(animate);
   }
-  animate();
+  requestAnimationFrame(animate);
 }
 
-wheel.addEventListener('click', spinWheel);
-
-// --- Modal xử lý ---
-function showWinner(winner) {
-  document.getElementById("winnerText").textContent = winner;
-  document.getElementById("winnerModal").style.display = "flex";
+function easeOut(t) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
-function closeModal() {
-  document.getElementById("winnerModal").style.display = "none";
-}
-
-function removeWinner() {
-  options = options.filter(opt => opt !== currentWinner);
+// modal buttons
+keepBtn.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+removeBtn.addEventListener("click", () => {
+  entries = entries.filter(e => e !== selectedEntry);
+  textarea.value = entries.join("\n");
   drawWheel();
-  closeModal();
-}
-
-// --- Nhập entries ---
-document.getElementById("entries").addEventListener("input", e => {
-  options = e.target.value.split("\n").filter(x => x.trim() !== "");
-  drawWheel();
+  modal.style.display = "none";
 });
