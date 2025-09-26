@@ -16,9 +16,6 @@
     <!-- Bảng nhập dữ liệu -->
     <div class="panel">
       <textarea id="entries" placeholder="Enter entries here... (mỗi dòng 1 mục)"></textarea>
-      <div class="panel-footer">
-        Version 379 <a href="#">Changelog</a>
-      </div>
     </div>
   </div>
 
@@ -37,7 +34,18 @@
     </div>
   </div>
 </div>
-  
+
+  <!-- Popup hiển thị kết quả -->
+<div id="resultModal" class="modal">
+  <div class="modal-content">
+    <p id="modalText"></p>
+    <div class="modal-buttons">
+      <button id="keepBtn">Keep</button>
+      <button id="removeBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
   <script src="script.js"></script>
 </body>
 </html>
