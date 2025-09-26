@@ -1,114 +1,125 @@
-const wheel = document.getElementById('wheel');
-const ctx = wheel.getContext('2d');
-const entriesBox = document.getElementById('entries');
+let currentStep = 1;
+let totalStudents = 0;
 
-let spinning = false;
-let angle = 0;
-let angularVelocity = 0;
-let animationFrameId;
+function nextStep(step) {
+  document.getElementById(`step${currentStep}`).classList.remove("active");
+  currentStep = step;
+  document.getElementById(`step${currentStep}`).classList.add("active");
 
-// Hàm vẽ bánh xe với entries
-function drawWheel(a = 0) {
-  const entries = entriesBox.value
-    .split("\n")
-    .map(e => e.trim())
-    .filter(e => e.length > 0);
-
-  const n = entries.length || 1; // số ô
-  const arc = (2 * Math.PI) / n;
-
-  ctx.clearRect(0, 0, wheel.width, wheel.height);
-
-  ctx.save();
-  ctx.translate(250, 250);
-  ctx.rotate(a);
-
-  for (let i = 0; i < n; i++) {
-    // vẽ sector
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, 240, i * arc, (i + 1) * arc);
-    ctx.closePath();
-    ctx.fillStyle = i % 2 === 0 ? "#f8b400" : "#f85f73";
-    ctx.fill();
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
-
-    // vẽ text
-    ctx.save();
-    ctx.rotate(i * arc + arc / 2);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 18px Arial";
-    ctx.fillText(entries[i] || "?", 220, 10);
-    ctx.restore();
+  if (step === 2 && !document.getElementById("classSelect").value) {
+    alert("Hãy chọn lớp trước!");
+    currentStep = 1;
+    document.getElementById("step1").classList.add("active");
   }
-
-  ctx.restore();
 }
 
-drawWheel();
+function showPanel(panel) {
+  document.getElementById("studentPanel").classList.remove("active");
+  document.getElementById("wheelPanel").classList.remove("active");
 
-// Hàm quay bánh xe
+  if (panel === "student") {
+    document.getElementById("studentPanel").classList.add("active");
+  } else {
+    document.getElementById("wheelPanel").classList.add("active");
+  }
+}
+
+function pickStudent() {
+  totalStudents = parseInt(document.getElementById("studentCount").value);
+  if (!totalStudents || totalStudents <= 0) {
+    alert("Hãy nhập số học sinh hợp lệ!");
+    return;
+  }
+  let student = Math.floor(Math.random() * totalStudents) + 1;
+  document.getElementById("studentResult").innerText = `🎯 Học sinh số: ${student}`;
+}
+
+// ================== VÒNG QUAY ==================
+const canvas = document.getElementById("wheelCanvas");
+const ctx = canvas.getContext("2d");
+const spinBtn = document.getElementById("spinBtn");
+const resultText = document.getElementById("resultText");
+
+const segments = ["Toán", "Văn", "Anh", "Khoa học", "Sử", "Địa", "Âm nhạc", "Thể thao"];
+const colors = ["#FF6B6B","#FFD93D","#6BCB77","#4D96FF","#9B5DE5","#F15BB5","#00BBF9","#FEE440"];
+
+let startAngle = 0;
+let arc = Math.PI * 2 / segments.length;
+let spinAngle = 0;
+let spinTime = 0;
+let spinTimeTotal = 0;
+let spinning = false;
+
+function drawWheel() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < segments.length; i++) {
+    let angle = startAngle + i * arc;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath();
+    ctx.moveTo(250, 250);
+    ctx.arc(250, 250, 250, angle, angle + arc);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 18px Segoe UI";
+    ctx.translate(
+      250 + Math.cos(angle + arc / 2) * 160,
+      250 + Math.sin(angle + arc / 2) * 160
+    );
+    ctx.rotate(angle + arc / 2 + Math.PI / 2);
+    ctx.fillText(segments[i], -ctx.measureText(segments[i]).width / 2, 0);
+    ctx.restore();
+  }
+}
+
+function rotateWheel() {
+  spinTime += 20;
+  if (spinTime >= spinTimeTotal) {
+    stopRotateWheel();
+    return;
+  }
+  let spinAngleChange = easeOut(spinTime, 0, spinAngle, spinTimeTotal);
+  startAngle += (spinAngleChange * Math.PI / 180);
+  drawWheel();
+  requestAnimationFrame(rotateWheel);
+}
+
+function stopRotateWheel() {
+  let degrees = startAngle * 180 / Math.PI + 90;
+  let arcd = 360 / segments.length;
+  let index = Math.floor((360 - (degrees % 360)) / arcd) % segments.length;
+
+  resultText.textContent = `🎉 Chủ đề: ${segments[index]} 🎉`;
+  spinning = false;
+}
+
+function easeOut(t, b, c, d) {
+  let ts = (t/=d)*t;
+  let tc = ts*t;
+  return b+c*(tc + -3*ts + 3*t);
+}
+
 function spinWheel() {
   if (spinning) return;
   spinning = true;
+  resultText.textContent = "";
 
-  angularVelocity = Math.random() * 0.2 + 0.35;
-  let deceleration = 0.992;
+  spinAngle = Math.random() * 10 + 10;
+  spinTime = 0;
+  spinTimeTotal = 3000 + Math.random() * 2000;
 
-  function animate() {
-    angle += angularVelocity;
-    angularVelocity *= deceleration;
-
-    drawWheel(angle);
-
-    if (angularVelocity < 0.002) {
-      spinning = false;
-      cancelAnimationFrame(animationFrameId);
-
-      // Xác định kết quả
-      const entries = entriesBox.value
-        .split("\n")
-        .map(e => e.trim())
-        .filter(e => e.length > 0);
-      if (entries.length > 0) {
-        const arc = (2 * Math.PI) / entries.length;
-        const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
-        showPopup(options[selected]);
-      }
-      return;
-    }
-    animationFrameId = requestAnimationFrame(animate);
-  }
-  animate();
+  rotateWheel();
 }
 
-wheel.addEventListener('click', spinWheel);
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.key === "Enter") spinWheel();
-});
-
-let currentResult = null; // lưu kết quả quay
-
-function showPopup(result) {
-  currentResult = result;
-  document.getElementById("popupText").textContent = "🎉 Kết quả: " + result;
-  document.getElementById("popup").style.display = "block";
+if (spinBtn) {
+  spinBtn.addEventListener("click", spinWheel);
 }
 
-function closePopup() {
-  document.getElementById("popup").style.display = "none";
-}
-
-function removeResult() {
-  options = options.filter(opt => opt !== currentResult);
-  drawRouletteWheel();
-  closePopup();
-}
-
-document.getElementById("newOption").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    addOption();
-  }
-});
+drawWheel();
