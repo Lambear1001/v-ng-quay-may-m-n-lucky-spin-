@@ -75,7 +75,7 @@ function spinWheel() {
       if (entries.length > 0) {
         const arc = (2 * Math.PI) / entries.length;
         const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
-        alert("Kết quả: " + entries[index]);
+        showWinner(winner);
       }
       return;
     }
@@ -89,3 +89,43 @@ document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.key === "Enter") spinWheel();
 });
 
+let currentResult = null; // lưu kết quả quay
+
+function showPopup(result) {
+  currentResult = result;
+  document.getElementById("popupText").textContent = "🎉 Kết quả: " + result;
+  document.getElementById("popup").style.display = "block";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function removeResult() {
+  options = options.filter(opt => opt !== currentResult);
+  drawRouletteWheel();
+  closePopup();
+}
+
+function showWinner(winner) {
+  currentWinner = winner;
+  document.getElementById("winnerText").textContent = winner;
+  document.getElementById("winnerModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("winnerModal").style.display = "none";
+}
+
+function removeWinner() {
+  options = options.filter(opt => opt !== currentWinner);
+  drawRouletteWheel(); // vẽ lại vòng quay sau khi xóa
+  closeModal();
+}
+
+
+document.getElementById("newOption").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    addOption();
+  }
+});
