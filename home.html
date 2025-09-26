@@ -16,9 +16,6 @@
     <!-- Bảng nhập dữ liệu -->
     <div class="panel">
       <textarea id="entries" placeholder="Enter entries here... (mỗi dòng 1 mục)"></textarea>
-      <div class="panel-footer">
-        Version 379 <a href="#">Changelog</a>
-      </div>
     </div>
   </div>
 
@@ -26,6 +23,23 @@
   <p id="popupText"></p>
   <button class="remove" onclick="removeResult()">Remove</button>
   <button class="keep" onclick="closePopup()">Keep</button>
+</div>
+  
+  <!-- Winner Modal -->
+<div class="modal" id="winnerModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>We have a winner!</span>
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="winnerText"></p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeModal()">Close</button>
+      <button class="remove-btn" onclick="removeWinner()">Remove</button>
+    </div>
+  </div>
 </div>
   
   <script src="script.js"></script>
