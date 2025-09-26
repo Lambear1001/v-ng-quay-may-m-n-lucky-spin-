@@ -7,30 +7,17 @@
 </head>
 <body>
   <div class="container">
+    <!-- Vòng quay -->
     <div class="wheel-area">
       <canvas id="wheel" width="500" height="500"></canvas>
-      <div class="wheel-text">
-        <div class="top-text">Click to spin</div>
-        <div class="bottom-text">or press ctrl+enter</div>
-      </div>
       <div class="arrow"></div>
     </div>
-    
+
+    <!-- Bảng nhập dữ liệu -->
     <div class="panel">
-      <textarea id="entries" placeholder="Enter entries here..."></textarea>
+      <textarea id="entries" placeholder="Enter entries here... (mỗi dòng 1 mục)"></textarea>
       <div class="panel-footer">
         Version 379 <a href="#">Changelog</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Popup -->
-  <div id="resultModal" class="modal">
-    <div class="modal-content">
-      <p id="resultText"></p>
-      <div class="modal-buttons">
-        <button id="keepBtn">Keep</button>
-        <button id="removeBtn">Remove</button>
       </div>
     </div>
   </div>
