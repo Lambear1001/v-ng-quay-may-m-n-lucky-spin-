@@ -1,33 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Lucky Spin Wheel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trường chính - Vòng quay may mắn</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Vòng quay -->
-    <div class="wheel-area">
-      <canvas id="wheel" width="500" height="500"></canvas>
-      <div class="arrow"></div>
+  <!-- Bước 1: Chọn lớp -->
+  <div id="step1" class="step active">
+    <h2>Bạn đang học lớp mấy?</h2>
+    <select id="classSelect">
+      <option value="">--Chọn lớp--</option>
+      <option value="6">Lớp 6</option>
+      <option value="7">Lớp 7</option>
+      <option value="8">Lớp 8</option>
+    </select>
+    <button onclick="nextStep(2)">Tiếp tục</button>
+  </div>
+
+  <!-- Bước 2: Nhập số học sinh -->
+  <div id="step2" class="step">
+    <h2>Có bao nhiêu học sinh?</h2>
+    <input type="number" id="studentCount" placeholder="Nhập số học sinh">
+    <button onclick="nextStep(3)">Tiếp tục</button>
+  </div>
+
+  <!-- Bước 3: Giao diện chính -->
+  <div id="step3" class="step">
+    <div class="switch-bar">
+      <button onclick="showPanel('student')">Học sinh số mấy</button>
+      <button onclick="showPanel('wheel')">Vòng quay chủ đề</button>
     </div>
 
-    <!-- Bảng nhập dữ liệu -->
-    <div class="panel">
-      <textarea id="entries" placeholder="Enter entries here... (mỗi dòng 1 mục)"></textarea>
-      <div class="panel-footer">
-        Version 379 <a href="#">Changelog</a>
+    <!-- Panel chọn học sinh -->
+    <div id="studentPanel" class="panel active">
+      <h2 id="studentResult">Nhấn nút để chọn học sinh</h2>
+      <button onclick="pickStudent()">Chọn học sinh</button>
+    </div>
+
+    <!-- Panel vòng quay -->
+    <div id="wheelPanel" class="panel">
+      <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
       </div>
+      <button id="spinBtn">Quay ngay!</button>
+      <p id="resultText"></p>
     </div>
   </div>
 
-  <div class="popup" id="popup">
-  <p id="popupText"></p>
-  <button class="remove" onclick="removeResult()">Remove</button>
-  <button class="keep" onclick="closePopup()">Keep</button>
-</div>
-  
   <script src="script.js"></script>
 </body>
 </html>
