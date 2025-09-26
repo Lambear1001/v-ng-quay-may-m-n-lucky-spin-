@@ -69,3 +69,40 @@ body {
   color: #0074d9;
   text-decoration: none;
 }
+
+/* Popup nho nhỏ */
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.popup button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+.popup button.remove { background: #dc3545; }
+.popup button.keep { background: #28a745; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
