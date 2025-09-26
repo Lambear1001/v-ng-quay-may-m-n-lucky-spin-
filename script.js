@@ -91,22 +91,6 @@ document.addEventListener('keydown', e => {
 
 let currentResult = null; // lưu kết quả quay
 
-function showPopup(result) {
-  currentResult = result;
-  document.getElementById("popupText").textContent = "🎉 Kết quả: " + result;
-  document.getElementById("popup").style.display = "block";
-}
-
-function closePopup() {
-  document.getElementById("popup").style.display = "none";
-}
-
-function removeResult() {
-  options = options.filter(opt => opt !== currentResult);
-  drawRouletteWheel();
-  closePopup();
-}
-
 function showWinner(winner) {
   currentWinner = winner;
   document.getElementById("winnerText").textContent = winner;
