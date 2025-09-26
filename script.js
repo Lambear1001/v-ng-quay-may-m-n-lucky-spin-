@@ -113,3 +113,26 @@ document.getElementById("newOption").addEventListener("keypress", function(e) {
     addOption();
   }
 });
+
+let selectedItem = entries[selectedIndex]; // entries là mảng dữ liệu
+
+// Hiện modal
+const modal = document.getElementById("resultModal");
+const modalText = document.getElementById("modalText");
+const keepBtn = document.getElementById("keepBtn");
+const removeBtn = document.getElementById("removeBtn");
+
+modalText.textContent = "Kết quả: " + selectedItem;
+modal.style.display = "flex";
+
+// Nút giữ lại
+keepBtn.onclick = () => {
+  modal.style.display = "none";
+};
+
+// Nút xóa khỏi danh sách
+removeBtn.onclick = () => {
+  entries.splice(selectedIndex, 1); // xóa mục
+  modal.style.display = "none";
+  drawWheel(); // vẽ lại vòng quay không có mục vừa xóa
+};
