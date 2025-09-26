@@ -1,107 +1,86 @@
 body {
-  background: #fff;
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-}
-
-/* Khung vòng quay */
-.wheel-area {
-  position: relative;
-  width: 500px;
-  height: 500px;
-}
-
-#wheel {
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
-}
-
-/* Mũi tên chỉ định */
-.arrow {
-  position: absolute;
-  right: -24px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
-  clip-path: polygon(100% 50%, 0 0, 0 100%);
-  background: #ccc;
-  border: 2px solid #888;
-}
-
-/* Panel bên phải */
-.panel {
-  width: 350px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
-  min-height: 540px;
-}
-
-#entries {
-  flex: 1;
-  width: 100%;
-  margin-bottom: 14px;
-  font-size: 1.1em;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  resize: none;
-  min-height: 400px;
-}
-
-.panel-footer {
-  font-size: 0.95em;
-  color: #666;
-}
-.panel-footer a {
-  color: #0074d9;
-  text-decoration: none;
-}
-
-.popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  display: none;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.popup p {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-  font-weight: bold;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  margin: 0;
+  padding: 0;
+  text-align: center;
   color: #333;
 }
 
-.popup button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: #fff;
+/* Bước */
+.step {
+  display: none;
+  margin-top: 50px;
 }
-.popup button.remove { background: #dc3545; }
-.popup button.keep { background: #28a745; }
+.step.active {
+  display: block;
+}
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+button {
+  padding: 12px 25px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #ff4e50, #f9d423);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Thanh chuyển đổi */
+.switch-bar {
+  display: flex;
+  justify-content: center;
+  background: #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.switch-bar button {
+  margin: 0 10px;
+  background: #666;
+}
+.switch-bar button:hover {
+  background: #444;
+}
+
+/* Panel */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Vòng quay */
+.wheel-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+}
+canvas {
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 40px solid red;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
+}
+
+#resultText {
+  margin-top: 25px;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #222;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
