@@ -75,8 +75,27 @@ function spinWheel() {
       if (entries.length > 0) {
         const arc = (2 * Math.PI) / entries.length;
         const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
-       let currentWinner = null;
-        showWinner(winner);
+       showWinner(winner);
+      }
+      return;
+    }
+    animationFrameId = requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+wheel.addEventListener('click', spinWheel);
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === "Enter") spinWheel();
+});
+
+document.getElementById("newOption").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    addOption();
+  }
+});
+
+let currentWinner = null;
 
 function showWinner(winner) {
   currentWinner = winner;
