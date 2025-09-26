@@ -1,108 +1,107 @@
-const wheel = document.getElementById('wheel');
-const ctx = wheel.getContext('2d');
-const entriesBox = document.getElementById('entries');
-
-let spinning = false;
-let angle = 0;
-let angularVelocity = 0;
-let animationFrameId;
-
-// Hàm vẽ bánh xe với entries
-function drawWheel(a = 0) {
-  const entries = entriesBox.value
-    .split("\n")
-    .map(e => e.trim())
-    .filter(e => e.length > 0);
-
-  const n = entries.length || 1; // số ô
-  const arc = (2 * Math.PI) / n;
-
-  ctx.clearRect(0, 0, wheel.width, wheel.height);
-
-  ctx.save();
-  ctx.translate(250, 250);
-  ctx.rotate(a);
-
-  for (let i = 0; i < n; i++) {
-    // vẽ sector
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, 240, i * arc, (i + 1) * arc);
-    ctx.closePath();
-    ctx.fillStyle = i % 2 === 0 ? "#f8b400" : "#f85f73";
-    ctx.fill();
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
-
-    // vẽ text
-    ctx.save();
-    ctx.rotate(i * arc + arc / 2);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 18px Arial";
-    ctx.fillText(entries[i] || "?", 220, 10);
-    ctx.restore();
-  }
-
-  ctx.restore();
+body {
+  background: #fff;
+  font-family: Arial, sans-serif;
 }
 
-drawWheel();
-
-// Hàm quay bánh xe
-function spinWheel() {
-  if (spinning) return;
-  spinning = true;
-
-  angularVelocity = Math.random() * 0.2 + 0.35;
-  let deceleration = 0.992;
-
-  function animate() {
-    angle += angularVelocity;
-    angularVelocity *= deceleration;
-
-    drawWheel(angle);
-
-    if (angularVelocity < 0.002) {
-      spinning = false;
-      cancelAnimationFrame(animationFrameId);
-
-      // Xác định kết quả
-      const entries = entriesBox.value
-        .split("\n")
-        .map(e => e.trim())
-        .filter(e => e.length > 0);
-      if (entries.length > 0) {
-        const arc = (2 * Math.PI) / entries.length;
-        const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
-        showPopup(options[selected]);
-      }
-      return;
-    }
-    animationFrameId = requestAnimationFrame(animate);
-  }
-  animate();
+.container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
 }
 
-wheel.addEventListener('click', spinWheel);
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.key === "Enter") spinWheel();
-});
-
-let currentResult = null; // lưu kết quả quay
-
-function showPopup(result) {
-  currentResult = result;
-  document.getElementById("popupText").textContent = "🎉 Kết quả: " + result;
-  document.getElementById("popup").style.display = "block";
+/* Khung vòng quay */
+.wheel-area {
+  position: relative;
+  width: 500px;
+  height: 500px;
 }
 
-function closePopup() {
-  document.getElementById("popup").style.display = "none";
+#wheel {
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
 }
 
-function removeResult() {
-  options = options.filter(opt => opt !== currentResult);
-  drawRouletteWheel();
-  closePopup();
+/* Mũi tên chỉ định */
+.arrow {
+  position: absolute;
+  right: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  clip-path: polygon(100% 50%, 0 0, 0 100%);
+  background: #ccc;
+  border: 2px solid #888;
+}
+
+/* Panel bên phải */
+.panel {
+  width: 350px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  min-height: 540px;
+}
+
+#entries {
+  flex: 1;
+  width: 100%;
+  margin-bottom: 14px;
+  font-size: 1.1em;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  resize: none;
+  min-height: 400px;
+}
+
+.panel-footer {
+  font-size: 0.95em;
+  color: #666;
+}
+.panel-footer a {
+  color: #0074d9;
+  text-decoration: none;
+}
+
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.popup button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+.popup button.remove { background: #dc3545; }
+.popup button.keep { background: #28a745; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
