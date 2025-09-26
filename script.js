@@ -75,7 +75,7 @@ function spinWheel() {
       if (entries.length > 0) {
         const arc = (2 * Math.PI) / entries.length;
         const index = Math.floor(((2 * Math.PI) - (angle % (2 * Math.PI))) / arc) % entries.length;
-        showWinner(winner);
+        showPopup(options[selected]);
       }
       return;
     }
@@ -91,48 +91,18 @@ document.addEventListener('keydown', e => {
 
 let currentResult = null; // lưu kết quả quay
 
-function showWinner(winner) {
-  currentWinner = winner;
-  document.getElementById("winnerText").textContent = winner;
-  document.getElementById("winnerModal").style.display = "flex";
+function showPopup(result) {
+  currentResult = result;
+  document.getElementById("popupText").textContent = "🎉 Kết quả: " + result;
+  document.getElementById("popup").style.display = "block";
 }
 
-function closeModal() {
-  document.getElementById("winnerModal").style.display = "none";
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
 }
 
-function removeWinner() {
-  options = options.filter(opt => opt !== currentWinner);
-  drawRouletteWheel(); // vẽ lại vòng quay sau khi xóa
-  closeModal();
+function removeResult() {
+  options = options.filter(opt => opt !== currentResult);
+  drawRouletteWheel();
+  closePopup();
 }
-
-
-document.getElementById("newOption").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    addOption();
-  }
-});
-
-let selectedItem = entries[selectedIndex]; // entries là mảng dữ liệu
-
-// Hiện modal
-const modal = document.getElementById("resultModal");
-const modalText = document.getElementById("modalText");
-const keepBtn = document.getElementById("keepBtn");
-const removeBtn = document.getElementById("removeBtn");
-
-modalText.textContent = "Kết quả: " + selectedItem;
-modal.style.display = "flex";
-
-// Nút giữ lại
-keepBtn.onclick = () => {
-  modal.style.display = "none";
-};
-
-// Nút xóa khỏi danh sách
-removeBtn.onclick = () => {
-  entries.splice(selectedIndex, 1); // xóa mục
-  modal.style.display = "none";
-  drawWheel(); // vẽ lại vòng quay không có mục vừa xóa
-};
